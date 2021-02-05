@@ -1,2 +1,12 @@
 h1= question.title
 p= question.body
+
+ul class='answers-list'
+  = render question.answers 
+
+
+= form_with model: [question, @answer], local: true do |form|
+  = render 'shared/errors', resource: @answer
+  = form.label :body
+  = form.text_area :body
+  = form.submit 'Answer the question'
