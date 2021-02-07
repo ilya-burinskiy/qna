@@ -4,4 +4,10 @@ class Question < ApplicationRecord
 
   validates :title, presence: true
   validates :body, presence: true
+
+  def author?(user)
+    return false if user.nil?
+
+    user.questions.include?(self)
+  end
 end
