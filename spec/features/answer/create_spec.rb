@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'User can create answer on the question' do
   given(:user) { create(:user) }
-  given!(:question) { create(:question) }
+  given!(:question) { create(:question, author: create(:user)) }
 
   describe 'Authenticated user' do
     background do
