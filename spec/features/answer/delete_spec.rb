@@ -20,4 +20,10 @@ feature 'User can delete his answer' do
 
     expect(page).to_not have_content 'Delete'
   end
+
+  scenario 'unauthenticated user can not delete answer' do
+    visit question_path(question)
+
+    expect(page).to_not have_content 'Delete'
+  end
 end
