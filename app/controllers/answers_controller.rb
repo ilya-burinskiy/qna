@@ -22,6 +22,11 @@ class AnswersController < ApplicationController
     end
   end
 
+  def destroy
+    answer.destroy if answer.author?(current_user)
+    redirect_to question_path(question)
+  end
+
   private
 
   helper_method :answer, :question

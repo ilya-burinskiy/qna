@@ -1,9 +1,12 @@
 h1= question.title
 p= question.body
 
+- if question.author?(current_user)
+  = link_to 'Edit', edit_question_path(question)
+  = link_to 'Delete', question_path(question), method: :delete
+
 ul class='answers-list'
   = render question.answers 
-
 
 = form_with model: [question, @answer], local: true do |form|
   = render 'shared/errors', resource: @answer
