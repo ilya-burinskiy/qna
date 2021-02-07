@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
+  let(:question) { create(:question, author: user) }
+  let(:answer) { create(:answer, question: question, author: user) }
 
   describe 'Authenticated user' do
     before { login(user) }
@@ -30,7 +30,7 @@ RSpec.describe AnswersController, type: :controller do
 
       context 'with invalid attributes' do
         it 'does not save the answer' do
-          expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }.to_not change(Answer, :count)
+          expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }.to_not change(question.answers, :count)
         end
 
         it 're-renders the questions#show' do
@@ -51,7 +51,7 @@ RSpec.describe AnswersController, type: :controller do
           patch :update, params: { id: answer, answer: attributes_for(:answer) }
           answer.reload
 
-          expect(answer.body).to eq 'MyText'
+          expect(answer.body).to eq 'AnswerBody'
         end
 
         it 'redirects to a questions#show' do
@@ -66,12 +66,25 @@ RSpec.describe AnswersController, type: :controller do
         it 'does not change the answer' do
           answer.reload
 
-          expect(answer.body).to eq 'MyText'
+          expect(answer.body).to eq 'AnswerBody'
         end
 
         it 're-renders edit view' do
           expect(response).to render_template :edit
         end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let!(:answer) { create(:answer, question: question, author: user) }
+
+      it 'deletes the answer' do
+        expect { delete :destroy, params: { id: answer } }.to change(question.answers, :count).by(-1)
+      end
+
+      it 'redirects to question path' do
+        delete :destroy, params: { id: answer }
+        expect(response).to redirect_to question_path(question)
       end
     end
   end
@@ -103,12 +116,25 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not change the answer' do
         answer.reload
 
-        expect(answer.body).to eq 'MyText'
+        expect(answer.body).to eq 'AnswerBody'
       end
 
       it 'redirects to sign in page' do
         expect(response).to redirect_to new_user_session_path
       end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let!(:answer) { create(:answer, question: question, author: user) }
+
+    it 'does not delete the answer' do
+      expect { delete :destroy, params: { id: answer } }.to_not change(question.answers, :count)
+    end
+
+    it 'redirects to sign in page' do
+      delete :destroy, params: { id: question }
+      expect(response).to redirect_to new_user_session_path
     end
   end
 end

@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question) }
+  let(:question) { create(:question, author: user) }
 
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 3) }
+    let!(:questions) { create_list(:question, 3, author: user) }
 
     before { get :index }
 
@@ -96,8 +96,8 @@ RSpec.describe QuestionsController, type: :controller do
         it 'does not change the question' do
           question.reload
 
-          expect(question.title).to eq 'MyString'
-          expect(question.body).to eq 'MyText'
+          expect(question.title).to eq 'QuestionTitle'
+          expect(question.body).to eq 'QuestionBody'
         end
 
         it 're-renders edit view' do
@@ -107,13 +107,13 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let!(:question) { create(:question) }
+      let!(:question) { create(:question, author: user) }
 
       it 'deletes the question' do
         expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
       end
       
-      it 'redirects to index' do
+      it 'redirects to #index' do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to questions_path
       end
@@ -154,8 +154,8 @@ RSpec.describe QuestionsController, type: :controller do
       it 'does not change the question' do
         question.reload
 
-        expect(question.title).to eq 'MyString'
-        expect(question.body).to eq 'MyText'
+        expect(question.title).to eq 'QuestionTitle'
+        expect(question.body).to eq 'QuestionBody'
       end
 
       it 'redirects to sign in page' do
