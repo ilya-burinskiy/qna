@@ -80,8 +80,14 @@ RSpec.describe AnswersController, type: :controller do
     describe 'DELETE #destroy' do
       let!(:answer) { create(:answer, question: question, author: user) }
 
-      it 'deletes the answer' do
+      it 'deletes the answer if current user is its author' do
         expect { delete :destroy, params: { id: answer } }.to change(question.answers, :count).by(-1)
+      end
+
+      it 'does not delete the answer if current user is not its author' do
+        another_user = create(:user)
+        login(another_user)
+        expect { delete :destroy, params: { id: answer } }.to_not change(question.answers, :count)
       end
 
       it 'redirects to question path' do
