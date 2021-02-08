@@ -8,6 +8,6 @@ class Question < ApplicationRecord
   def author?(user)
     return false if user.nil?
 
-    user.questions.include?(self)
+    author == user
   end
 end
