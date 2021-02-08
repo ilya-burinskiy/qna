@@ -8,9 +8,13 @@ feature 'User can delete his question' do
   scenario 'user as the author of the answer deletes it' do
     sign_in(user1)
     visit question_path(question)
+    expect(page).to have_content question.title
+    expect(page).to have_content question.body
+
     click_on 'Delete'
 
     expect(page).to_not have_content question.title
+    expect(page).to_not have_content question.body
   end
 
   scenario 'user cannot delete a question created by another user' do
