@@ -23,7 +23,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer.destroy if answer.author?(current_user)
+    answer.destroy if current_user.author?(answer)
     redirect_to question_path(question)
   end
 

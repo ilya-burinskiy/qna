@@ -1,5 +1,5 @@
 li id="answers-list__#{answer.id}"
   p= answer.body
-  - if answer.author?(current_user)
+  - if current_user&.author?(answer)
     = link_to 'Edit', edit_answer_path(answer) 
     = link_to 'Delete', answer_path(answer), method: :delete
