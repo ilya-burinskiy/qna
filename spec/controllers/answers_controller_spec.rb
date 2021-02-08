@@ -48,10 +48,11 @@ RSpec.describe AnswersController, type: :controller do
         end
 
         it 'changes answer attributes' do
-          patch :update, params: { id: answer, answer: attributes_for(:answer) }
+          new_answer_attribures = attributes_for(:answer)
+          patch :update, params: { id: answer, answer: new_answer_attribures }
           answer.reload
 
-          expect(answer.body).to eq 'AnswerBody'
+          expect(answer.body).to eq new_answer_attribures[:body]
         end
 
         it 'redirects to a questions#show' do
@@ -61,15 +62,16 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       context 'with invalid attributes' do
-        before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) } }
-
         it 'does not change the answer' do
+          old_answer = answer
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }
           answer.reload
 
-          expect(answer.body).to eq 'AnswerBody'
+          expect(answer.body).to eq old_answer.body
         end
 
         it 're-renders edit view' do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }
           expect(response).to render_template :edit
         end
       end
@@ -111,15 +113,17 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe 'PATCH #update' do
-      before { patch :update, params: { id: answer, answer: attributes_for(:answer) } }
 
       it 'does not change the answer' do
+        old_answer = answer
+        patch :update, params: { id: answer, answer: attributes_for(:answer) }
         answer.reload
 
-        expect(answer.body).to eq 'AnswerBody'
+        expect(answer.body).to eq old_answer.body
       end
 
       it 'redirects to sign in page' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer) }
         expect(response).to redirect_to new_user_session_path
       end
     end

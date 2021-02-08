@@ -77,11 +77,12 @@ RSpec.describe QuestionsController, type: :controller do
         end
 
         it 'changes question attributes' do
-          patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
+          new_question_attributes = attributes_for(:question)
+          patch :update, params: { id: question, question: new_question_attributes }
           question.reload
 
-          expect(question.title).to eq 'new title'
-          expect(question.body).to eq 'new body'
+          expect(question.title).to eq new_question_attributes[:title]
+          expect(question.body).to eq new_question_attributes[:body]
         end
 
         it 'redirects to updated question' do
@@ -91,16 +92,17 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       context 'with invalid attributes' do
-        before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
-
         it 'does not change the question' do
+          old_question = question
+          patch :update, params: { id: question, question: attributes_for(:question, :invalid) }
           question.reload
 
-          expect(question.title).to eq 'QuestionTitle'
-          expect(question.body).to eq 'QuestionBody'
+          expect(question.title).to eq old_question.title
+          expect(question.body).to eq old_question.body
         end
 
         it 're-renders edit view' do
+          patch :update, params: { id: question, question: attributes_for(:question, :invalid) }
           expect(response).to render_template :edit
         end
       end
@@ -149,17 +151,17 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'PATCH #update' do
-      before { patch :update, params: { id: question, question: attributes_for(:question) } }
-
       it 'does not change the question' do
+        old_question = question
+        patch :update, params: { id: question, question: attributes_for(:question) }
         question.reload
 
-        expect(question.title).to eq 'QuestionTitle'
-        expect(question.body).to eq 'QuestionBody'
+        expect(question.title).to eq old_question.title
+        expect(question.body).to eq old_question.body
       end
 
       it 'redirects to sign in page' do
-        delete :destroy, params: { id: question }
+        patch :update, params: { id: question, question: attributes_for(:question) }
         expect(response).to redirect_to new_user_session_path
       end
     end
