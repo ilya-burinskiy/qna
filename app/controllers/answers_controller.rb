@@ -2,14 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
 
   def create
-    @answer = question.answers.new(answer_params)
-    @answer.author = current_user
-
-    if @answer.save
-      redirect_to question_path(question), notice: 'Your answer successfully created.'
-    else
-      render 'questions/show'
-    end
+    @answer = question.answers.create(answer_params.merge({ author: current_user }))
   end
 
   def edit; end
