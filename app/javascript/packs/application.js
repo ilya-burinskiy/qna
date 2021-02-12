@@ -14,3 +14,4 @@ ActiveStorage.start()
 
 require('jquery')
 require('utilities/answer.js')
+require('utilities/question.js')

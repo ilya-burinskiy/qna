@@ -1,9 +1,5 @@
-h1= question.title
-p= question.body
-
-- if current_user&.author?(question)
-  p= link_to 'Edit', edit_question_path(question)
-  p= link_to 'Delete', question_path(question), method: :delete
+div class="question" id="question-#{question.id}"
+  = render question
 
 ul class='answers-list'
   = render question.answers

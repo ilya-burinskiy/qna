@@ -1,4 +1,5 @@
 ul class='questions-list'
-  = render @questions
+  - @questions.each do |question|
+    = link_to question.title, question
   
 p= link_to 'Ask new question', new_question_path
