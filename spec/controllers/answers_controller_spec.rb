@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, author: user) }
+  let(:question) { create(:question, author: create(:user)) }
   let(:answer) { create(:answer, question: question, author: user) }
 
   describe 'Authenticated user' do
@@ -33,37 +33,57 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe 'PATCH #update' do
-      context 'with valid attributes' do
-        it 'assigns the requested answer to @answer' do
-          patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
-          expect(assigns(:answer)).to eq answer
+      context "Logged user is answer author" do
+        context 'with valid attributes' do
+          it 'assigns the requested answer to @answer' do
+            patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+
+            expect(assigns(:answer)).to eq answer
+          end
+
+          it 'changes answer attributes' do
+            new_answer_attribures = attributes_for(:answer)
+            patch :update, params: { id: answer, answer: new_answer_attribures, format: :js }
+            answer.reload
+
+            expect(answer.body).to eq new_answer_attribures[:body]
+          end
+
+          it 'renders #update' do
+            patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+            expect(response).to render_template :update
+          end
         end
 
-        it 'changes answer attributes' do
-          new_answer_attribures = attributes_for(:answer)
-          patch :update, params: { id: answer, answer: new_answer_attribures, format: :js }
+        context 'with invalid attributes' do
+          it 'does not change the answer' do
+            old_answer = answer
+            patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
+            answer.reload
+
+            expect(answer.body).to eq old_answer.body
+          end
+
+          it 'renders update' do
+            patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
+            expect(response).to render_template :update
+          end
+        end
+      end
+
+      context "Logged user is not answer author" do
+        before { login(create(:user)) }
+
+        it 'does not changes answer attributes' do
+          old_answer = answer
+          patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
           answer.reload
 
-          expect(answer.body).to eq new_answer_attribures[:body]
+          expect(answer).to eq old_answer
         end
 
         it 'renders #update' do
           patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
-          expect(response).to render_template :update
-        end
-      end
-
-      context 'with invalid attributes' do
-        it 'does not change the answer' do
-          old_answer = answer
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
-          answer.reload
-
-          expect(answer.body).to eq old_answer.body
-        end
-
-        it 'renders update' do
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
           expect(response).to render_template :update
         end
       end

@@ -62,39 +62,56 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'PATCH #update' do
-      context 'with valid attributes' do
-        it 'assigns the requested question to @question' do
-          patch :update, params: { id: question, question: attributes_for(:question), format: :js }
-          expect(assigns(:question)).to eq question
+      context 'Logged user is question author' do
+        context 'with valid attributes' do
+          it 'assigns the requested question to @question' do
+            patch :update, params: { id: question, question: attributes_for(:question), format: :js }
+            expect(assigns(:question)).to eq question
+          end
+
+          it 'changes question attributes' do
+            new_question_attributes = attributes_for(:question)
+            patch :update, params: { id: question, question: new_question_attributes, format: :js }
+            question.reload
+
+            expect(question.title).to eq new_question_attributes[:title]
+            expect(question.body).to eq new_question_attributes[:body]
+          end
+
+          it 'renders #update' do
+            patch :update, params: { id: question, question: attributes_for(:question), format: :js }
+            expect(response).to render_template :update
+          end
         end
 
-        it 'changes question attributes' do
-          new_question_attributes = attributes_for(:question)
-          patch :update, params: { id: question, question: new_question_attributes, format: :js }
-          question.reload
+        context 'with invalid attributes' do
+          it 'does not change the question' do
+            old_question = question
+            patch :update, params: { id: question, question: attributes_for(:question, :invalid), format: :js }
+            question.reload
 
-          expect(question.title).to eq new_question_attributes[:title]
-          expect(question.body).to eq new_question_attributes[:body]
-        end
+            expect(question.title).to eq old_question.title
+            expect(question.body).to eq old_question.body
+          end
 
-        it 'renders #update' do
-          patch :update, params: { id: question, question: attributes_for(:question), format: :js }
-          expect(response).to render_template :update
+          it 'renders #update' do
+            patch :update, params: { id: question, question: attributes_for(:question, :invalid), format: :js }
+            expect(response).to render_template :update
+          end
         end
       end
 
-      context 'with invalid attributes' do
-        it 'does not change the question' do
+      context 'Logged user is not question author' do
+        it 'does not changes question attributes' do
           old_question = question
-          patch :update, params: { id: question, question: attributes_for(:question, :invalid), format: :js }
+          patch :update, params: { id: question, question: attributes_for(:question), format: :js }
           question.reload
 
-          expect(question.title).to eq old_question.title
-          expect(question.body).to eq old_question.body
+          expect(question).to eq old_question
         end
 
         it 'renders #update' do
-          patch :update, params: { id: question, question: attributes_for(:question, :invalid), format: :js }
+          patch :update, params: { id: question, question: attributes_for(:question), format: :js }
           expect(response).to render_template :update
         end
       end
@@ -110,6 +127,11 @@ RSpec.describe QuestionsController, type: :controller do
 
           expect(question.best_answer).to eq answer
         end
+
+        it 'renders #best_answer' do
+          patch :best_answer, params: { id: question, answer_id: answer, format: :js }
+          expect(response).to render_template :best_answer
+        end
       end
 
       context 'Logged user is not question author' do
@@ -121,11 +143,11 @@ RSpec.describe QuestionsController, type: :controller do
 
           expect(question.best_answer).to eq nil
         end
-      end
 
-      it 'renders #best_answer' do
-        patch :best_answer, params: { id: question, answer_id: answer, format: :js }
-        expect(response).to render_template :best_answer
+        it 'renders #best_answer' do
+          patch :best_answer, params: { id: question, answer_id: answer, format: :js }
+          expect(response).to render_template :best_answer
+        end
       end
     end
 

@@ -23,14 +23,14 @@ class QuestionsController < ApplicationController
   end
 
   def best_answer
-    if current_user&.author?(question)
+    if current_user.author?(question)
       question.best_answer = Answer.find(params[:answer_id])
       question.save
     end
   end
 
   def update
-    question.update(question_params)
+    question.update(question_params) if current_user.author?(question)
   end
 
   def destroy
