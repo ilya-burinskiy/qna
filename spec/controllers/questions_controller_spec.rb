@@ -100,6 +100,35 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
+    describe 'PATCH #best_answer' do
+      let(:answer) { create(:answer, question: question, author: create(:user)) }
+      
+      context 'Logged user is question author' do
+        it 'answer becomes the best for the question' do
+          patch :best_answer, params: { id: question, answer_id: answer, format: :js }
+          question.reload
+
+          expect(question.best_answer).to eq answer
+        end
+      end
+
+      context 'Logged user is not question author' do
+        before { login(create(:user)) }
+
+        it 'answer does not become the best for the question' do
+          patch :best_answer, params: { id: question, answer_id: answer, format: :js }
+          question.reload
+
+          expect(question.best_answer).to eq nil
+        end
+      end
+
+      it 'renders #best_answer' do
+        patch :best_answer, params: { id: question, answer_id: answer, format: :js }
+        expect(response).to render_template :best_answer
+      end
+    end
+
     describe 'DELETE #destroy' do
       let!(:question) { create(:question, author: user) }
 
@@ -153,6 +182,17 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirects to sign in page' do
         patch :update, params: { id: question, question: attributes_for(:question) }
         expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    describe 'PATCH #best_answer' do
+      let(:answer) { create(:answer, question: question, author: create(:user)) }
+      
+      it 'answer does not become the best for question' do
+        patch :best_answer, params: { id: question, answer_id: answer, format: :js }
+        question.reload
+
+        expect(question.best_answer).to eq nil
       end
     end
 
