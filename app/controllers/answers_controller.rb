@@ -15,6 +15,10 @@ class AnswersController < ApplicationController
     redirect_to question_path(question)
   end
 
+  def best
+    answer.become_best if current_user.author?(question)
+  end
+
   private
 
   helper_method :answer, :question

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, author: create(:user)) }
+  let(:question) { create(:question, author: user) }
   let(:answer) { create(:answer, question: question, author: user) }
 
   describe 'Authenticated user' do
@@ -89,6 +89,38 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
+    describe 'PATCH #best_answer' do
+      context 'Logged user is question author' do
+        it 'answer becomes the best for the question' do
+          patch :best, params: { id: answer, format: :js }
+          question.reload
+
+          expect(question.best_answer).to eq answer
+        end
+
+        it 'renders #answer' do
+          patch :best, params: { id: answer, format: :js }
+          expect(response).to render_template :best
+        end
+      end
+
+      context 'Logged user is not question author' do
+        before { login(create(:user)) }
+
+        it 'answer does not become the best for the question' do
+          patch :best, params: { id: answer, format: :js }
+          question.reload
+          
+          expect(question.best_answer).to eq nil
+        end
+
+        it 'renders #best' do
+          patch :best, params: { id: answer, format: :js }
+          expect(response).to render_template :best
+        end
+      end
+    end
+
     describe 'DELETE #destroy' do
       let!(:answer) { create(:answer, question: question, author: user) }
 
@@ -137,18 +169,27 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
-  end
 
-  describe 'DELETE #destroy' do
-    let!(:answer) { create(:answer, question: question, author: user) }
+    describe 'PATCH #best_answer' do
+      it 'answer does not become the best for question' do
+        patch :best, params: { id: answer, format: :js }
+        question.reload
 
-    it 'does not delete the answer' do
-      expect { delete :destroy, params: { id: answer } }.to_not change(question.answers, :count)
+        expect(question.best_answer).to eq nil
+      end
     end
 
-    it 'redirects to sign in page' do
-      delete :destroy, params: { id: question }
-      expect(response).to redirect_to new_user_session_path
+    describe 'DELETE #destroy' do
+      let!(:answer) { create(:answer, question: question, author: user) }
+
+      it 'does not delete the answer' do
+        expect { delete :destroy, params: { id: answer } }.to_not change(question.answers, :count)
+      end
+
+      it 'redirects to sign in page' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to new_user_session_path
+      end
     end
   end
 end

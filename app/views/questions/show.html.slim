@@ -2,7 +2,7 @@ div class="question" id="question-#{question.id}"
   = render question
 
 ul class='answers-list'
-  = render question.sorted_answers
+  = render question.answers
 
 .answer-errors
   = render 'shared/errors', resource: @answer
