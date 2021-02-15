@@ -7,13 +7,11 @@ class Answer < ApplicationRecord
   default_scope { order(best: :desc) }
 
   def become_best
-    if question.answers.where(best: true).count == 1
-      old_best_answer = question.answers.first
-      old_best_answer.best = false
-      old_best_answer.save
-    end
+    old_best_answer = question.best_answer
 
-    self.best = true
-    save
+    Answer.transaction do
+      old_best_answer.update!(best: false) if old_best_answer
+      update!(best: true)
+    end
   end
 end

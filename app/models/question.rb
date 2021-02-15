@@ -6,8 +6,6 @@ class Question < ApplicationRecord
   validates :body, presence: true
 
   def best_answer
-    return nil if answers.where(best: true).count == 0
-
-    answers.first
+    answers.where(best: true).first
   end
 end
