@@ -11,3 +11,7 @@ import "channels"
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+require('jquery')
+require('utilities/answer.js')
+require('utilities/question.js')

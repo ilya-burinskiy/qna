@@ -1,15 +1,13 @@
-h1= question.title
-p= question.body
-
-- if current_user&.author?(question)
-  = link_to 'Edit', edit_question_path(question)
-  = link_to 'Delete', question_path(question), method: :delete
+div class="question" id="question-#{question.id}"
+  = render question
 
 ul class='answers-list'
-  = render question.answers 
+  = render question.answers
 
-= form_with model: [question, @answer], local: true do |form|
+.answer-errors
   = render 'shared/errors', resource: @answer
+
+= form_with model: [question, @answer], class: "new-answer", local: false do |form|
   = form.label :body
   = form.text_area :body
   = form.submit 'Answer the question'

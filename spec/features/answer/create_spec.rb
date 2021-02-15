@@ -4,7 +4,7 @@ feature 'User can create answer on the question' do
   given(:user) { create(:user) }
   given!(:question) { create(:question, author: create(:user)) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(user)
       visit question_path(question)
@@ -14,7 +14,6 @@ feature 'User can create answer on the question' do
       fill_in 'Body', with: 'Body'
       click_on 'Answer the question'
 
-      expect(page).to have_content 'Your answer successfully created.'
       expect(page).to have_content 'Body'
     end
 

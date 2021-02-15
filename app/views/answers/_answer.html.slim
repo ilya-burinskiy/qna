@@ -1,5 +1,12 @@
 li id="answers-list__#{answer.id}"
   p= answer.body
   - if current_user&.author?(answer)
-    = link_to 'Edit', edit_answer_path(answer) 
-    = link_to 'Delete', answer_path(answer), method: :delete
+    p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    p= link_to 'Delete', answer_path(answer), method: :delete, remote: true
+  - if current_user&.author?(answer.question)
+    p= link_to 'Best', best_answer_path(answer), method: :patch, remote: true
+
+  = form_with model: answer, class: "hidden", html: { id: "edit-answer-#{answer.id}" }, local: false do |form|
+    = form.label :body
+    = form.text_area :body
+    = form.submit 'Save'
