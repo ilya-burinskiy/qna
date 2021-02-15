@@ -9,10 +9,7 @@ p class="question__body"
 - if current_user&.author?(question)
   = form_with model: question, class: "hidden", html: { id: "edit-question-#{question.id}" }, local: false do |form|
     p
-      = form.label :title
-      = form.text_field :title
-      = form.label :body
-      = form.text_area :body
+      = render 'form_fields', form: form
     = form.submit 'Save'
 
   p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }

@@ -7,6 +7,5 @@ li id="answers-list__#{answer.id}"
     p= link_to 'Best', best_answer_path(answer), method: :patch, remote: true
 
   = form_with model: answer, class: "hidden", html: { id: "edit-answer-#{answer.id}" }, local: false do |form|
-    = form.label :body
-    = form.text_area :body
+    = render 'form_fields', form: form
     = form.submit 'Save'
