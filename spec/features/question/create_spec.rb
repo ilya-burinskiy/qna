@@ -30,6 +30,16 @@ feature 'User can create question', %q{
 
       expect(page).to have_content "Title can't be blank"
     end
+
+    scenario 'asks a question with attached file' do
+      fill_in 'Title', with: 'Title'
+      fill_in 'Body', with: 'Body'
+
+      attach_file 'File', "#{Rails.root}/db/seeds.rb"
+      click_on 'Ask'
+
+      expect(page).to have_link 'seeds.rb'
+    end
   end
 
 
