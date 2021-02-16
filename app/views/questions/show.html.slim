@@ -1,9 +1,6 @@
 div class="question" id="question-#{question.id}"
   = render question
 
-- if question.file.attached?
-  p= link_to question.file.filename.to_s, url_for(question.file)
-
 ul class='answers-list'
   = render question.answers
 

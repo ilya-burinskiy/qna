@@ -35,10 +35,11 @@ feature 'User can create question', %q{
       fill_in 'Title', with: 'Title'
       fill_in 'Body', with: 'Body'
 
-      attach_file 'File', "#{Rails.root}/db/seeds.rb"
+      attach_file 'File', ["#{Rails.root}/db/seeds.rb", "#{Rails.root}/db/schema.rb"]
       click_on 'Ask'
 
       expect(page).to have_link 'seeds.rb'
+      expect(page).to have_link 'schema.rb'
     end
   end
 
