@@ -11,12 +11,10 @@ class AnswersController < ApplicationController
 
   def destroy
     answer.destroy if current_user.author?(answer)
-    
-    redirect_to question_path(question)
   end
 
   def best
-    answer.become_best if current_user.author?(question)
+    answer.become_best if current_user.author?(answer.question)
   end
 
   private
