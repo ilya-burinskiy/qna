@@ -65,13 +65,13 @@ RSpec.describe QuestionsController, type: :controller do
       context 'Logged user is question author' do
         context 'with valid attributes' do
           it 'assigns the requested question to @question' do
-            patch :update, params: { id: question, question: attributes_for(:question), format: :js }
+            patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
             expect(assigns(:question)).to eq question
           end
 
           it 'changes question attributes' do
             new_question_attributes = attributes_for(:question)
-            patch :update, params: { id: question, question: new_question_attributes, format: :js }
+            patch :update, params: { id: question, question: new_question_attributes }, format: :js
             question.reload
 
             expect(question.title).to eq new_question_attributes[:title]
@@ -79,7 +79,7 @@ RSpec.describe QuestionsController, type: :controller do
           end
 
           it 'renders #update' do
-            patch :update, params: { id: question, question: attributes_for(:question), format: :js }
+            patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
             expect(response).to render_template :update
           end
         end
@@ -87,7 +87,7 @@ RSpec.describe QuestionsController, type: :controller do
         context 'with invalid attributes' do
           it 'does not change the question' do
             old_question = question
-            patch :update, params: { id: question, question: attributes_for(:question, :invalid), format: :js }
+            patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
             question.reload
 
             expect(question.title).to eq old_question.title
@@ -95,7 +95,7 @@ RSpec.describe QuestionsController, type: :controller do
           end
 
           it 'renders #update' do
-            patch :update, params: { id: question, question: attributes_for(:question, :invalid), format: :js }
+            patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
             expect(response).to render_template :update
           end
         end
@@ -104,14 +104,14 @@ RSpec.describe QuestionsController, type: :controller do
       context 'Logged user is not question author' do
         it 'does not changes question attributes' do
           old_question = question
-          patch :update, params: { id: question, question: attributes_for(:question), format: :js }
+          patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
           question.reload
 
           expect(question).to eq old_question
         end
 
         it 'renders #update' do
-          patch :update, params: { id: question, question: attributes_for(:question), format: :js }
+          patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
           expect(response).to render_template :update
         end
       end
@@ -125,8 +125,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'does not delete the question if current use is not its author' do
-        another_user = create(:user)
-        login(another_user)
+        login(create(:user))
         expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
       end
       
