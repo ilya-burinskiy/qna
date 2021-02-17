@@ -1,2 +1,6 @@
-= form.label :body
-= form.text_area :body
+p
+  = form.label :body
+  = form.text_area :body
+p
+  = form.label :files
+  = form.file_field :files, multiple: true

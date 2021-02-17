@@ -1,5 +1,12 @@
 li id="answers-list__#{answer.id}"
   p= answer.body
+
+  div class="answer" id="answer-#{answer.id}-files"
+    - if answer.files.attached?
+      - answer.files.each do |file|
+        div id="file-#{file.id}"
+          p= link_to file.filename.to_s, url_for(file)
+
   - if current_user&.author?(answer)
     p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     p= link_to 'Delete', answer_path(answer), method: :delete, remote: true

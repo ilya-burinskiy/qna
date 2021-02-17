@@ -52,5 +52,20 @@ feature 'User can edit answer' do
 
       expect(page).to_not have_link 'Edit'
     end
+
+    scenario 'edits an answer with attached files' do
+      sign_in(user1)
+      visit question_path(question)
+
+      within(".answers-list") do
+        click_on 'Edit'
+        fill_in 'Body', with: 'Body'
+        attach_file 'File', ["#{Rails.root}/db/seeds.rb", "#{Rails.root}/db/schema.rb"]
+        click_on 'Save'
+
+        expect(page).to have_link 'seeds.rb'
+        expect(page).to have_link 'schema.rb'
+      end
+    end
   end
 end
