@@ -23,13 +23,8 @@ feature 'The author of the question can choose the best answer' do
         expect(find_by_id("answers-list__#{answer.id}")).to have_link 'Best'
       end
 
-      first_answer = answers[0]
-      best_answer = answers[1]
-
-      find_by_id("answers-list__#{best_answer.id}").click_on 'Best'
-
-      expect(find('.answers-list').all('li')[0].text).to have_content best_answer.body
-      expect(find('.answers-list').all('li')[1].text).to have_content first_answer.body
+      within("#answers-list__#{question.answers.last.id}") { click_link 'Best' }
+      within(".answers-list") { expect(find('li', match: :first)).to have_content question.best_answer.body }
     end
 
     scenario "can not choose best answer to another author's question" do
