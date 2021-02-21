@@ -8,6 +8,5 @@ ul class='answers-list'
   = render 'shared/errors', resource: @answer
 
 = form_with model: [question, @answer], class: "new-answer", local: false do |form|
-  = form.label :body
-  = form.text_area :body
+  = render 'answers/form_fields', form: form
   = form.submit 'Answer the question'

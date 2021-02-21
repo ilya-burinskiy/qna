@@ -4,9 +4,9 @@ FactoryBot.define do
 
     question
     association :author, factory: :user
-  end
 
-  trait :invalid do
-    body { nil }
+    trait :invalid do
+      body { nil }
+    end
   end
 end

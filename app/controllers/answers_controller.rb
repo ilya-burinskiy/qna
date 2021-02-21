@@ -11,12 +11,10 @@ class AnswersController < ApplicationController
 
   def destroy
     answer.destroy if current_user.author?(answer)
-    
-    redirect_to question_path(question)
   end
 
   def best
-    answer.become_best if current_user.author?(question)
+    answer.become_best if current_user.author?(answer.question)
   end
 
   private
@@ -24,7 +22,7 @@ class AnswersController < ApplicationController
   helper_method :answer, :question
 
   def answer
-    @answer ||= params[:id] ? Answer.find(params[:id]) : Answer.new
+    @answer ||= params[:id] ? Answer.with_attached_files.find(params[:id]) : Answer.new
   end
 
   def question
@@ -32,6 +30,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end
