@@ -142,33 +142,33 @@ RSpec.describe AnswersController, type: :controller do
   describe 'Unauthenticated user' do
     describe 'POST #create' do
       it 'does not save a new answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to_not change(Answer, :count)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirects to sign in page' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to new_user_session_path
+      it 'responses with unauthorized status' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
+        expect(response).to have_http_status(:unauthorized)
       end
     end
 
     describe 'PATCH #update' do
       it 'does not change the answer' do
         old_answer = answer
-        patch :update, params: { id: answer, answer: attributes_for(:answer) }
+        patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
         answer.reload
 
         expect(answer.body).to eq old_answer.body
       end
 
-      it 'redirects to sign in page' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer) }
-        expect(response).to redirect_to new_user_session_path
+      it 'responses with unauthorized status' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
+        expect(response).to have_http_status(:unauthorized)
       end
     end
 
     describe 'PATCH #best_answer' do
       it 'answer does not become the best for question' do
-        patch :best, params: { id: answer }
+        patch :best, params: { id: answer }, format: :js
         question.reload
 
         expect(question.best_answer).to eq nil
@@ -177,12 +177,12 @@ RSpec.describe AnswersController, type: :controller do
 
     describe 'DELETE #destroy' do
       it 'does not delete the answer' do
-        expect { delete :destroy, params: { id: answer } }.to_not change(question.answers, :count)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(question.answers, :count)
       end
 
-      it 'redirects to sign in page' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to new_user_session_path
+      it 'responses with unauthorized status' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
