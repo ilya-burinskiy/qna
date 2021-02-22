@@ -1,6 +1,12 @@
 div class="question" id="question-#{question.id}"
   = render question
 
+.links
+  p Links
+  ul
+    - question.links.each do |link|
+      li= link_to link.name, link.url
+
 ul class='answers-list'
   = render question.answers
 
