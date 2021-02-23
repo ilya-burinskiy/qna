@@ -4,3 +4,13 @@ p
 p
   = form.label :files
   = form.file_field :files, multiple: true, direct_upload: true
+
+p Links
+p
+  = form.fields_for :links do |link_form|
+    p
+      = link_form.label :name, 'Link name'
+      = link_form.text_field :name
+    p
+      = link_form.label :url
+      = link_form.text_field :url
