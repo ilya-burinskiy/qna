@@ -9,13 +9,28 @@ feature 'User can add links to answer' do
     sign_in(user)
     visit question_path(question)
 
-    fill_in 'Body', with: 'Body'
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
-    click_on 'Answer the question'
+    within 'form.new-answer' do
+      fill_in 'Body', with: 'Body'
+
+      click_on 'Add link'
+      wait_for_ajax
+
+      within all('.nested-fields')[0] do
+        fill_in 'Link name', with: 'Gist1'
+        fill_in 'Url', with: gist_url
+      end
+
+      within all('.nested-fields')[1] do
+        fill_in 'Link name', with: 'Gist2'
+        fill_in 'Url', with: gist_url
+      end
+
+      click_on 'Answer the question'
+    end
 
     within '.answers-list' do
-      expect(page).to have_link 'My gist', href: gist_url
+      expect(page).to have_link 'Gist1', href: gist_url
+      expect(page).to have_link 'Gist2', href: gist_url
     end
   end
 end
