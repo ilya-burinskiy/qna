@@ -22,5 +22,17 @@ li id="answers-list__#{answer.id}"
     p= link_to 'Best', best_answer_path(answer), method: :patch, remote: true
 
   = form_with model: answer, class: "hidden", html: { id: "edit-answer-#{answer.id}" }, local: false do |form|
-    = render 'form_fields', form: form
+    .field
+      = form.label :body
+      br
+      = form.text_area :body
+    .field
+      = form.label :files
+      br
+      = form.file_field :files, multiple: true, direct_upload: true
+    p Links
+    = form.fields_for :links do |link|
+      = render 'link_fields', f: link
+    .links
+      = link_to_add_association 'Add link', form, :links
     = form.submit 'Save'
