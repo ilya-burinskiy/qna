@@ -5,7 +5,10 @@ div class="question" id="question-#{question.id}"
   p Links
   ul
     - question.links.each do |link|
-      li= link_to link.name, link.url
+      li id="link-#{link.id}"
+        = link_to link.name, link.url
+        - if current_user&.author?(link.linkable)
+          = link_to 'Delete link', link_path(link), method: :delete, remote: true
 
 ul class='answers-list'
   = render question.answers
