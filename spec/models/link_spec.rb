@@ -21,4 +21,22 @@ RSpec.describe Link, type: :model do
       end
     end
   end
+
+  describe '#gist?' do
+    context 'gist url' do
+      let(:question_gist_url) { create(:question_link, :gist) }
+
+      it 'should return true' do
+        expect(question_gist_url.gist?).to eq true
+      end
+    end
+
+    context 'not gist url' do
+      let(:question_url) { create(:question_link) }
+
+      it 'should return false' do
+        expect(question_url.gist?).to eq false
+      end
+    end
+  end
 end

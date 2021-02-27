@@ -7,6 +7,11 @@ class Link < ApplicationRecord
   validates :url, presence: true
   validate :url, :validate_link_url
 
+  def gist?
+    parsed_url = URI.parse(url)
+    parsed_url.host == 'gist.github.com' && (parsed_url.path =~ /\/[a-zA-Z0-9_-]+\/\w+/) == 0
+  end
+
   private
 
   def validate_link_url

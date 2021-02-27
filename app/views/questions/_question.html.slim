@@ -14,6 +14,21 @@ div id="question-#{question.id}-files"
         - if current_user&.author?(question)
           = link_to 'Delete file', attachment_path(file), method: :delete, remote: true
 
+.links
+  p Links
+  ul class="question-links"
+    - question.links.each do |link|
+      li id="link-#{link.id}"
+        .link-errors
+          = render 'shared/errors', resource: link
+        -if link.gist?
+          = link.name
+          script src="#{link.url}.js"
+        - else
+          = link_to link.name, link.url
+        - if current_user&.author?(link.linkable)
+          = link_to 'Delete link', link_path(link), method: :delete, remote: true
+
 - if current_user&.author?(question)
   = form_with model: question, class: "hidden", html: { id: "edit-question-#{question.id}" }, local: false do |form|
     .field
