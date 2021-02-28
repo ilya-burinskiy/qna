@@ -8,7 +8,6 @@ feature 'User can browse his rewards' do
 
   before do
     answer.become_best
-    UserReward.create(reward: reward, user: user)
   end
 
   scenario 'User can view his rewards' do

@@ -22,5 +22,8 @@ class Answer < ApplicationRecord
         update!(best: true)
       end
     end
+
+    reward = question.reward
+    UserReward.create(reward: reward, user: author) if reward
   end
 end

@@ -11,7 +11,6 @@ RSpec.describe RewardsController, type: :controller do
     context 'Authenticated user' do
       before(:each) do
         answer.become_best
-        UserReward.create(reward: reward, user: user2)
       end
 
       it 'populates an array of all questions' do

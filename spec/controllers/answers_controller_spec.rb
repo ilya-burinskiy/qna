@@ -98,20 +98,6 @@ RSpec.describe AnswersController, type: :controller do
           expect(question.best_answer).to eq answer
         end
 
-        context 'Question has reward' do
-          let!(:reward) { create(:reward, question: question, author: user) }
-
-          it 'adds new reward to user' do
-            expect { patch :best, params: { id: answer }, format: :js }.to change(user.earned_rewards, :count).by(1)
-          end
-        end
-
-        context 'Question does not have reward' do
-          it 'does not add new reward to user' do
-            expect { patch :best, params: { id: answer }, format: :js }.to_not change(user.earned_rewards, :count)
-          end
-        end
-
         it 'renders #answer' do
           patch :best, params: { id: answer }, format: :js
           expect(response).to render_template :best

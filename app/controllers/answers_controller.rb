@@ -16,9 +16,6 @@ class AnswersController < ApplicationController
   def best
     if current_user.author?(answer.question)
       answer.become_best
-
-      reward = answer.question.reward
-      UserReward.create(reward: reward, user: current_user) if reward
     end
   end
 
