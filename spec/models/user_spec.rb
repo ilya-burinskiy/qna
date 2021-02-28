@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_many(:questions).dependent(:destroy) }
-  it { should have_many(:created_rewards).class_name("Reward").dependent(:destroy) }
+  it { should have_many(:created_rewards).dependent(:destroy) }
   it { should have_many(:user_rewards).dependent(:destroy) }
   it { should have_many(:earned_rewards).through(:user_rewards).source(:reward) }
   
