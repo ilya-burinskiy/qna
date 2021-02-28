@@ -12,16 +12,8 @@ feature 'User can add links to answer' do
     within 'form.new-answer' do
       fill_in 'Body', with: 'Body'
 
-      click_on 'Add link'
-      wait_for_ajax
-
-      within all('.nested-fields')[0] do
+      within find('.nested-fields') do
         fill_in 'Link name', with: 'Gist1'
-        fill_in 'Url', with: gist_url
-      end
-
-      within all('.nested-fields')[1] do
-        fill_in 'Link name', with: 'Gist2'
         fill_in 'Url', with: gist_url
       end
 
@@ -29,8 +21,7 @@ feature 'User can add links to answer' do
     end
 
     within '.answers-list' do
-      expect(page).to have_link 'Gist1', href: gist_url
-      expect(page).to have_link 'Gist2', href: gist_url
+      expect(page).to have_content 'Gist1'
     end
   end
 end
