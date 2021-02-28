@@ -13,9 +13,22 @@
     = form.label :files
     br
     = form.file_field :files, multiple: true, direct_upload: true
+
   p Links
   = form.fields_for :links do |link|
     = render 'link_fields', f: link
   .links
     = link_to_add_association 'Add link', form, :links
+
+  p Reward
+  = form.fields_for :reward do |reward|
+    .field
+      = reward.label :name,'Reward name'
+      br
+      = reward.text_field :name
+    .field
+      = reward.label :image
+      br
+      = reward.file_field :image 
+
   = form.submit 'Ask'
