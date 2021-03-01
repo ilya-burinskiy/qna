@@ -13,17 +13,20 @@ class Answer < ApplicationRecord
 
   def become_best
     old_best_answer = question.best_answer
+    reward = question.reward
 
     if old_best_answer.nil?
-      update!(best: true)
+      Answer.transaction do
+        update!(best: true)
+        UserReward.create(reward: reward, user: author) if reward
+      end
     elsif old_best_answer.id != id
       Answer.transaction do
         old_best_answer.update!(best: false)
         update!(best: true)
+        UserReward.create(reward: reward, user: author) if reward
       end
     end
 
-    reward = question.reward
-    UserReward.create(reward: reward, user: author) if reward
   end
 end
