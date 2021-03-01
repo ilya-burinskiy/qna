@@ -24,6 +24,10 @@ RSpec.describe QuestionsController, type: :controller do
     it 'renders show view' do
       expect(response).to render_template :show
     end
+
+    it 'creates new link' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
+    end
   end
 
   describe 'Authenticated user' do
@@ -31,6 +35,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     describe 'GET #new' do
       before { get :new }
+
+      it 'creates new link' do
+        expect(assigns(:question).links.first).to be_a_new(Link)
+      end
 
       it 'renders new view' do
         expect(response).to render_template :new

@@ -14,7 +14,9 @@ class AnswersController < ApplicationController
   end
 
   def best
-    answer.become_best if current_user.author?(answer.question)
+    if current_user.author?(answer.question)
+      answer.become_best
+    end
   end
 
   private
@@ -30,6 +32,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, 
+      files: [], links_attributes: [:name, :url, :id, :_destroy])
   end
 end

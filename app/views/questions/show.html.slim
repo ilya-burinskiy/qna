@@ -8,5 +8,17 @@ ul class='answers-list'
   = render 'shared/errors', resource: @answer
 
 = form_with model: [question, @answer], class: "new-answer", local: false do |form|
-  = render 'answers/form_fields', form: form
+  .field
+    = form.label :body
+    br
+    = form.text_area :body
+  .field
+    = form.label :files
+    br
+    = form.file_field :files, multiple: true, direct_upload: true
+  p Links
+  = form.fields_for :links do |link|
+    = render 'link_fields', f: link
+  .links
+    = link_to_add_association 'Add link', form, :links
   = form.submit 'Answer the question'

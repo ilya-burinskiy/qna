@@ -1,5 +1,9 @@
+- if current_user
+  = link_to 'Rewards', rewards_path
+
 ul class='questions-list'
   - @questions.each do |question|
     = link_to question.title, question
+    br
   
 p= link_to 'Ask new question', new_question_path

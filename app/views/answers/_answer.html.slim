@@ -1,6 +1,21 @@
 li id="answers-list__#{answer.id}"
   p= answer.body
 
+  .links
+    p Links
+    ul class="answer-links"
+      - answer.links.each do |link|
+        li id="link-#{link.id}"
+          .link-errors
+            = render 'shared/errors', resource: link
+          - if link.gist?
+            = link.name
+            script src="#{link.url}.js" class="gist-scri"
+          - else
+            = link_to link.name, link.url
+          - if current_user&.author?(link.linkable)
+            = link_to 'Delete link', link_path(link), method: :delete, remote: true
+
   div class="answer" id="answer-#{answer.id}-files"
     - if answer.files.attached?
       - answer.files.each do |file|
@@ -16,5 +31,17 @@ li id="answers-list__#{answer.id}"
     p= link_to 'Best', best_answer_path(answer), method: :patch, remote: true
 
   = form_with model: answer, class: "hidden", html: { id: "edit-answer-#{answer.id}" }, local: false do |form|
-    = render 'form_fields', form: form
+    .field
+      = form.label :body
+      br
+      = form.text_area :body
+    .field
+      = form.label :files
+      br
+      = form.file_field :files, multiple: true, direct_upload: true
+    p Links
+    = form.fields_for :links do |link|
+      = render 'link_fields', f: link
+    .links
+      = link_to_add_association 'Add link', form, :links
     = form.submit 'Save'
