@@ -1,4 +1,5 @@
 require 'rails_helper'
+require Rails.root.join('spec/models/concerns/votable.rb')
 
 RSpec.describe Question, type: :model do
   it { should belong_to(:author) }
@@ -10,6 +11,8 @@ RSpec.describe Question, type: :model do
   it { should validate_presence_of :body }
 
   it { should accept_nested_attributes_for :links }
+
+  it_behaves_like 'votable'
 
   it 'has one attached file' do
     expect(Question.new.files).to be_instance_of(ActiveStorage::Attached::Many)
