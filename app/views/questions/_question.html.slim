@@ -3,6 +3,8 @@ h2 class="question__title"
 p class="question__body"
   = question.body
 
+= render 'shared/vote', votable: question
+
 .question-errors
   = render "shared/errors", resource: question
   
