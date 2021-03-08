@@ -5,6 +5,13 @@ shared_examples_for 'votable' do
   let(:votable) { build(votable_klass) }
   let(:user) { create(:user) }
 
+  describe '#user_vote' do
+    it 'should return user vote' do
+      vote = user.vote(votable, :for)
+      expect(votable.user_vote(user)).to eq vote
+    end
+  end
+
   describe '#for_count' do
     it 'should return number of for votes' do
       user.vote(votable, :for)
