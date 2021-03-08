@@ -1,20 +1,16 @@
 FactoryBot.define do
-  factory :question_vote, class: 'Vote' do
+  factory :vote, class: 'Vote' do
     status { :for }
 
     association :voter, factory: :user
-    association :voteble, factory: :question
 
-    trait :against do
-      status { :against }
+    trait :question do
+      association :votable, factory: :question
     end
-  end
 
-  factory :answer_vote, class: 'Vote' do
-    status { :for }
-
-    association :voter, factory: :user
-    association :voteble, factory: :answer
+    trait :answer do
+      association :votable, factory: :answer
+    end
 
     trait :against do
       status { :against }
