@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 shared_examples_for 'votable' do
-  let(:model_sym) { described_class.to_s.underscore.to_sym }
-  let(:votable) { build(model_sym) }
+  let(:votable_klass) { described_class.to_s.underscore.to_sym }
+  let(:votable) { build(votable_klass) }
   let(:user) { create(:user) }
 
   describe '#for_count' do
