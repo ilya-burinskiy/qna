@@ -6,12 +6,12 @@ module Voted
   end
 
   def vote_for
-    @vote = current_user.vote(@votable, :for)
+    @vote = current_user.vote(@votable, 1)
     vote_respond
   end
 
   def vote_against
-    @vote = current_user.vote(@votable, :against)
+    @vote = current_user.vote(@votable, -1)
     vote_respond
   end
 

@@ -8,11 +8,6 @@ class Vote < ApplicationRecord
   }
   validate :validate_vote_author
 
-  enum status: {
-    for:     0,
-    against: 1
-  }.freeze
-
   private
 
   def validate_vote_author

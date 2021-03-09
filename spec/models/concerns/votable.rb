@@ -7,22 +7,8 @@ shared_examples_for 'votable' do
 
   describe '#user_vote' do
     it 'should return user vote' do
-      vote = user.vote(votable, :for)
+      vote = user.vote(votable, 1)
       expect(votable.user_vote(user)).to eq vote
-    end
-  end
-
-  describe '#for_count' do
-    it 'should return number of for votes' do
-      user.vote(votable, :for)
-      expect(votable.for_count).to eq 1
-    end
-  end
-
-  describe '#against_count' do
-    it 'should return number of against votes' do
-      user.vote(votable, :against)
-      expect(votable.against_count).to eq 1
     end
   end
 
@@ -30,8 +16,8 @@ shared_examples_for 'votable' do
     let(:user2) { create(:user) }
 
     it 'should return votable rating' do
-      user.vote(votable, :for)
-      user2.vote(votable, :against)
+      user.vote(votable, 1)
+      user2.vote(votable, -1)
       expect(votable.rating).to eq 0
     end
   end

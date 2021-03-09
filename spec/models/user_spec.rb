@@ -28,7 +28,7 @@ RSpec.describe User, type: :model do
   describe '#vote' do
     context 'User is votable author' do
       it 'should not change user assigned votes count' do
-        expect { user1.vote(question, :for) }.to_not change(user1.assigned_votes, :count)
+        expect { user1.vote(question, 1) }.to_not change(user1.assigned_votes, :count)
       end
 
       it 'should add error to user vote' do
@@ -39,19 +39,19 @@ RSpec.describe User, type: :model do
 
     context 'User votes for the first time' do
       it 'should change by 1 user assigned votes count' do
-        expect { user2.vote(question, :for) }.to change(user2.assigned_votes, :count).by(1)
+        expect { user2.vote(question, 1) }.to change(user2.assigned_votes, :count).by(1)
       end
     end
 
     context 'User votes twice' do
-      before { user2.vote(question, :for) }
+      before { user2.vote(question, 1) }
 
       it 'should not change user assigned votes count' do
-        expect { user2.vote(question, :against) }.to_not change(user2.assigned_votes, :count)
+        expect { user2.vote(question, -1) }.to_not change(user2.assigned_votes, :count)
       end
 
       it 'should add error to user vote' do
-        vote = user2.vote(question, :for)
+        vote = user2.vote(question, 1)
         expect(vote.errors.messages[:voter_id]).to include("You have already voted")
       end
     end
@@ -60,7 +60,7 @@ RSpec.describe User, type: :model do
   describe '#unvote' do
     context 'User has voted' do
       it 'should delete his vot' do
-        user2.vote(question, :for)
+        user2.vote(question, 1)
         expect { user2.unvote(question) }.to change(user2.assigned_votes, :count).by(-1)
       end
     end

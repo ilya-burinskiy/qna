@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :vote, class: 'Vote' do
-    status { :for }
+    status { 1 }
 
     association :voter, factory: :user
 
@@ -13,7 +13,7 @@ FactoryBot.define do
     end
 
     trait :against do
-      status { :against }
+      status { -1 }
     end
   end
 end

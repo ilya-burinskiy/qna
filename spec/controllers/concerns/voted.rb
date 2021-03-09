@@ -21,7 +21,7 @@ shared_examples_for 'voted' do
           post :vote_for, params: { id: votable }, format: :json
 
           expect(user.assigned_votes.count).to eq user_assigned_votes_count + 1
-          expect(user.assigned_votes.last.status).to eq 'for'
+          expect(user.assigned_votes.last.status).to eq 1
         end
 
         it 'responds with json' do
@@ -72,7 +72,7 @@ shared_examples_for 'voted' do
           post :vote_against, params: { id: votable }, format: :json
 
           expect(user.assigned_votes.count).to eq user_assigned_votes_count + 1
-          expect(user.assigned_votes.last.status).to eq 'against'
+          expect(user.assigned_votes.last.status).to eq -1
         end
 
         it 'responds with json' do
