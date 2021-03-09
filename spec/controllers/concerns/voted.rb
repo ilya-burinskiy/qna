@@ -17,11 +17,11 @@ shared_examples_for 'voted' do
         end
 
         it 'creates new for vote' do
-          user_assigned_votes_count = user.assigned_votes.count
+          user_votes_count = user.votes.count
           post :vote_for, params: { id: votable }, format: :json
 
-          expect(user.assigned_votes.count).to eq user_assigned_votes_count + 1
-          expect(user.assigned_votes.last.status).to eq 1
+          expect(user.votes.count).to eq user_votes_count + 1
+          expect(user.votes.last.status).to eq 1
         end
 
         it 'responds with json' do
@@ -39,7 +39,7 @@ shared_examples_for 'voted' do
         end
 
         it 'does not create new for vote' do
-          expect { post :vote_for, params: { id: votable }, format: :json }.to_not change(votable.author.assigned_votes, :count)
+          expect { post :vote_for, params: { id: votable }, format: :json }.to_not change(votable.author.votes, :count)
         end
 
         it 'responds with json' do
@@ -68,11 +68,11 @@ shared_examples_for 'voted' do
         end
 
         it 'creates new against vote' do
-          user_assigned_votes_count = user.assigned_votes.count
+          user_votes_count = user.votes.count
           post :vote_against, params: { id: votable }, format: :json
 
-          expect(user.assigned_votes.count).to eq user_assigned_votes_count + 1
-          expect(user.assigned_votes.last.status).to eq -1
+          expect(user.votes.count).to eq user_votes_count + 1
+          expect(user.votes.last.status).to eq -1
         end
 
         it 'responds with json' do
@@ -90,7 +90,7 @@ shared_examples_for 'voted' do
         end
 
         it 'does not create new for vote' do
-          expect { post :vote_against, params: { id: votable }, format: :json }.to_not change(votable.author.assigned_votes, :count)
+          expect { post :vote_against, params: { id: votable }, format: :json }.to_not change(votable.author.votes, :count)
         end
 
         it 'responds with json' do
@@ -115,7 +115,7 @@ shared_examples_for 'voted' do
         before { login(vote.voter) }
 
         it 'deletes vote' do
-          expect { delete :unvote, params: { id: vote.votable }, format: :json }.to change(vote.voter.assigned_votes, :count).by(-1)
+          expect { delete :unvote, params: { id: vote.votable }, format: :json }.to change(vote.voter.votes, :count).by(-1)
         end
 
         it 'responds with json' do
@@ -128,7 +128,7 @@ shared_examples_for 'voted' do
         before { login(user) }
 
         it 'does not deletes vote' do
-          expect { delete :unvote, params: { id: vote.votable }, format: :json }.to_not change(vote.voter.assigned_votes, :count)
+          expect { delete :unvote, params: { id: vote.votable }, format: :json }.to_not change(vote.voter.votes, :count)
         end
 
         it 'responds with json' do
@@ -141,7 +141,7 @@ shared_examples_for 'voted' do
 
   context 'Unauthenticated user' do
     it 'does not deletes vote' do
-      expect { delete :unvote, params: { id: vote.votable }, format: :json }.to_not change(vote.voter.assigned_votes, :count)
+      expect { delete :unvote, params: { id: vote.votable }, format: :json }.to_not change(vote.voter.votes, :count)
     end
 
     it 'responses with unauthorized status' do

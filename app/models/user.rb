@@ -5,7 +5,7 @@ class User < ApplicationRecord
   has_many :user_rewards, dependent: :destroy
   has_many :earned_rewards, through: :user_rewards, source: :reward
 
-  has_many :assigned_votes, class_name: "Vote", foreign_key: "voter_id", dependent: :destroy
+  has_many :votes, class_name: "Vote", foreign_key: "voter_id", dependent: :destroy
   
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -15,7 +15,7 @@ class User < ApplicationRecord
   end
 
   def vote(votable, vote_status)
-    Vote.create(voter: self, votable: votable, status: vote_status)
+    votes.create(voter: self, votable: votable, status: vote_status)
   end
 
   def unvote(votable)
@@ -23,6 +23,6 @@ class User < ApplicationRecord
   end
 
   def get_vote(votable)
-    @vote ||= assigned_votes.where(votable: votable).first
+    @vote ||= votes.where(votable: votable).first
   end
 end
