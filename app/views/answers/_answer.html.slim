@@ -1,6 +1,8 @@
 li id="answers-list__#{answer.id}"
   p= answer.body
 
+  = render 'shared/vote', votable: answer
+
   .links
     p Links
     ul class="answer-links"

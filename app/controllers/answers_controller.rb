@@ -1,5 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
+  
+  include Voted
 
   def create
     @answer = question.answers.create(answer_params.merge({ author: current_user }))

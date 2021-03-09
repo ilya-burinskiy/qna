@@ -1,0 +1,25 @@
+- if user_signed_in? && !current_user.author?(votable)
+  .vote id="vote-#{votable.class.name.downcase}-#{votable.id}"
+    .vote-errors
+      = render 'shared/errors', resource: votable.user_vote(current_user)
+   
+    p class='votable__rating'
+      = votable.rating
+
+    = link_to 'For', polymorphic_path(votable, action: :vote_for),
+          method: :post,
+          remote: true,
+          data: { type: :json },
+          class: 'vote__for'
+
+    = link_to 'Unvote', polymorphic_path(votable, action: :unvote),
+          method: :delete,
+          remote: true,
+          data: { type: :json },
+          class: 'vote__unvote'
+
+    = link_to 'Against', polymorphic_path(votable, action: :vote_against),
+          method: :post,
+          remote: true,
+          data: { type: :json },
+          class: 'vote__against'
