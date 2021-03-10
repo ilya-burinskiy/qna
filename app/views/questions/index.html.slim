@@ -3,7 +3,6 @@
 
 ul class='questions-list'
   - @questions.each do |question|
-    = link_to question.title, question
-    br
+    li= link_to question.title, question
   
 p= link_to 'Ask new question', new_question_path
