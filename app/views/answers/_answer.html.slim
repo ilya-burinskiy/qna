@@ -3,6 +3,13 @@ li id="answers-list__#{answer.id}"
 
   = render 'shared/vote', votable: answer
 
+  .answer-comments-errors
+
+  ul class="answer-comments"
+    = render answer.comments
+  - if current_user
+    = render 'comments/form', commentable: answer, comment: @comment
+
   .links
     p Links
     ul class="answer-links"

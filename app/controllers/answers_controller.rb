@@ -1,6 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  
+  before_action :set_comment
+
   include Voted
 
   def create
@@ -16,9 +17,7 @@ class AnswersController < ApplicationController
   end
 
   def best
-    if current_user.author?(answer.question)
-      answer.become_best
-    end
+    answer.become_best if current_user.author?(answer.question)
   end
 
   private
@@ -36,5 +35,9 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body, 
       files: [], links_attributes: [:name, :url, :id, :_destroy])
+  end
+
+  def set_comment
+    @comment = Comment.new
   end
 end

@@ -9,9 +9,13 @@ Rails.application.routes.draw do
       delete :unvote
     end
   end
-  
+
   resources :questions, concerns: [:votable], except: %i[edit] do
+    resources :comments, only: [:create]
+
     resources :answers, concerns: [:votable], except: %i[index show new edit], shallow: true do
+      resources :comments, only: [:create], shallow: false
+
       patch :best, on: :member 
     end
   end

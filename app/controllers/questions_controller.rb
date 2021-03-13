@@ -11,6 +11,7 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @comment = Comment.new
     @answer.links.new
   end
 
@@ -35,6 +36,7 @@ class QuestionsController < ApplicationController
 
   def update
     question.update(question_params) if current_user.author?(question)
+    @comment = Comment.new
   end
 
   def destroy

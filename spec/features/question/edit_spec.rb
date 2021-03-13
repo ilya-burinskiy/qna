@@ -22,10 +22,6 @@ feature 'User can edit question' do
 
       expect(page).to_not have_content question.title
       expect(page).to have_content 'New title'
-      
-      within '.question' do
-        expect(page).to_not have_selector 'textarea'
-      end
     end
 
     scenario 'edits his question with errors' do
