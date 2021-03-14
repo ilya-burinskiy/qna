@@ -2,6 +2,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_comment
 
+  after_action :publish_answer, only: [:create]
+
   include Voted
 
   def create
@@ -39,5 +41,10 @@ class AnswersController < ApplicationController
 
   def set_comment
     @comment = Comment.new
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+    ActionCable.server.broadcast "question_#{@answer.question.id}/answers", @answer
   end
 end

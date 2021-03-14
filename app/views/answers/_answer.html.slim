@@ -1,4 +1,4 @@
-li id="answers-list__#{answer.id}"
+li id="answers-list__#{answer.id}" data-id="#{answer.id}"
   p= answer.body
 
   = render 'shared/vote', votable: answer

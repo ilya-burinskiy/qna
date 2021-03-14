@@ -1,6 +1,8 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
 
+  after_action :publish_comment, only: [:create]
+
   def create
     find_commentable
     @comment = @commentable.comments.create(
@@ -20,5 +22,12 @@ class CommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:body)
+  end
+
+  def publish_comment
+    return if @comment.errors.any?
+
+    question_id = @comment.commentable.is_a?(Question) ? @comment.commentable.id : @comment.commentable.question.id
+    ActionCable.server.broadcast "question_#{question_id}/comments", @comment
   end
 end
