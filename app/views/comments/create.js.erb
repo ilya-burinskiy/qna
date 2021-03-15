@@ -1,0 +1,16 @@
+<% case @comment.commentable.class.name %>
+<% when 'Question' %>
+  $('.question-comments-errors').html('<%= render 'shared/errors', resource: @comment %>')
+
+  <% if @comment.persisted? %>
+    $('.question-comments').append('<%= j render @comment %>')
+    $('.form.form-question-comment-create #comment_body').val('')
+  <% end %>
+<% when 'Answer' %>
+  $('#answers-list__<%= @comment.commentable.id %> .answer-comments-errors').html('<%= render 'shared/errors', resource: @comment %>')
+
+  <% if @comment.persisted? %>
+    $('#answers-list__<%= @comment.commentable.id %> .answer-comments').append('<%= j render @comment %>')
+    $('.form.form-answer-comment-create #comment_body').val('')
+  <% end %>
+<% end %>

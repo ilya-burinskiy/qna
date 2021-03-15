@@ -7,6 +7,13 @@ p class="question__body"
 
 .question-errors
   = render "shared/errors", resource: question
+
+.question-comments-errors
+
+ul class="question-comments"
+  = render question.comments
+- if current_user
+  = render 'comments/form', commentable: question, comment: @comment
   
 div id="question-#{question.id}-files"
   - if question.files.attached?

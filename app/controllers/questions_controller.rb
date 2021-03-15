@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
+  after_action :publish_question, only: [:create]
+
   include Voted
 
   def index
@@ -9,6 +11,7 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @comment = Comment.new
     @answer.links.new
   end
 
@@ -33,6 +36,7 @@ class QuestionsController < ApplicationController
 
   def update
     question.update(question_params) if current_user.author?(question)
+    @comment = Comment.new
   end
 
   def destroy
@@ -52,6 +56,17 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :body, files: [],
       links_attributes: [:name, :url, :id, :_destroy],
       reward_attributes: [:name, :image]
+    )
+  end
+
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast(
+      'questions',
+      ApplicationController.render(
+        partial: 'questions/questions_list_element',
+        locals: { question: @question }
+      )
     )
   end
 end

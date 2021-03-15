@@ -2,6 +2,8 @@ doctype html
 html lang="en"
   head
     title qna
+    = action_cable_meta_tag
+    = Gon::Base.render_data
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'

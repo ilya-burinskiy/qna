@@ -1,7 +1,14 @@
-li id="answers-list__#{answer.id}"
+li id="answers-list__#{answer.id}" data-id="#{answer.id}"
   p= answer.body
 
   = render 'shared/vote', votable: answer
+
+  .answer-comments-errors
+
+  ul class="answer-comments"
+    = render answer.comments
+  - if current_user
+    = render 'comments/form', commentable: answer, comment: @comment
 
   .links
     p Links
