@@ -7,7 +7,6 @@ feature 'User can add links to answer' do
 
   scenario 'User adds link when answering a question', js: true do
     sign_in(user)
-    byebug
     visit question_path(question)
 
     within 'form.new-answer' do
