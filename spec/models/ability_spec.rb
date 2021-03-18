@@ -34,6 +34,20 @@ RSpec.describe Ability, type: :model do
 
         it { should be_able_to :update, question }
         it { should be_able_to :destroy, question }
+
+        context 'With link' do
+          let(:link) { create(:link, :question, linkable: question) }
+
+          it { should be_able_to :destroy, link }
+        end
+
+        context 'With attachment' do
+          before do
+            question.files.attach(io: File.open("#{Rails.root}/db/seeds.rb"), filename: 'seeds.rb')
+          end
+          
+          it { should be_able_to :destroy, question.files.first }
+        end
       end
 
       describe 'Answer abilities' do
@@ -41,6 +55,20 @@ RSpec.describe Ability, type: :model do
 
         it { should be_able_to :update, answer }
         it { should be_able_to :destroy, answer }
+
+        context 'With link' do
+          let(:link) { create(:link, :answer, linkable: answer) }
+
+          it { should be_able_to :destroy, link }
+        end
+
+        context 'With attachment' do
+          before do
+            answer.files.attach(io: File.open("#{Rails.root}/db/seeds.rb"), filename: 'seeds.rb')
+          end
+          
+          it { should be_able_to :destroy, answer.files.first }
+        end
 
         describe 'Best answer ability' do
           it { should_not be_able_to :best, answer }
@@ -60,6 +88,20 @@ RSpec.describe Ability, type: :model do
 
         it { should_not be_able_to :update, question }
         it { should_not be_able_to :destroy, question }
+
+        context 'With link' do
+          let(:link) { create(:link, :question, linkable: question) }
+
+          it { should_not be_able_to :destroy, link }
+        end
+
+        context 'With attachment' do
+          before do
+            question.files.attach(io: File.open("#{Rails.root}/db/seeds.rb"), filename: 'seeds.rb')
+          end
+          
+          it { should_not be_able_to :destroy, question.files.first }
+        end
       end
 
       describe 'Answer abilities' do
@@ -67,6 +109,20 @@ RSpec.describe Ability, type: :model do
 
         it { should_not be_able_to :update, answer }
         it { should_not be_able_to :destroy, answer }
+
+        context 'With link' do
+          let(:link) { create(:link, :answer, linkable: answer) }
+
+          it { should_not be_able_to :destroy, link }
+        end
+
+        context 'With attachment' do
+          before do
+            answer.files.attach(io: File.open("#{Rails.root}/db/seeds.rb"), filename: 'seeds.rb')
+          end
+          
+          it { should_not be_able_to :destroy, answer.files.first }
+        end
 
         describe 'Best answer ability' do
           let(:user) { answer.question.author }
