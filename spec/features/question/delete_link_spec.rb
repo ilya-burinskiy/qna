@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'User can delete his question link', js: true do
-  given(:question_link) { create(:question_link) }
+  given(:question_link) { create(:link, :question) }
   given(:question) { question_link.linkable }
   given(:user1) { question.author }
   given(:user2) { create(:user) }

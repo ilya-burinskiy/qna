@@ -4,7 +4,7 @@ RSpec.describe LinksController, type: :controller do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let!(:question) { create(:question, author: user1) }
-  let!(:question_link) { create(:question_link, linkable: question) }
+  let!(:question_link) { create(:link, :question, linkable: question) }
 
   describe 'DELETE #destroy' do
     describe 'Authenticated user' do
