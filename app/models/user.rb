@@ -17,7 +17,6 @@ class User < ApplicationRecord
   end
 
   def admin?
-    # type == "Admin" 
     is_a?(Admin)
   end
 

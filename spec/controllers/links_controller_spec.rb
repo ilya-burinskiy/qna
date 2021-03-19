@@ -28,9 +28,9 @@ RSpec.describe LinksController, type: :controller do
           expect { delete :destroy, params: { id: question_link }, format: :js }.to_not change(question.links, :count)
         end
 
-        it 'redirects to root' do
+        it 'responds with forbidden' do
           delete :destroy, params: { id: question_link }, format: :js
-          expect(response).to redirect_to root_url
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end
