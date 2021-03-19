@@ -5,7 +5,7 @@ feature 'User can delete his answer link', js: true do
   given(:user2) { create(:user) }
   given(:question) { create(:question, author: user1) }
   given(:answer) { create(:answer, question: question, author: user1) }
-  given!(:answer_link) { create(:answer_link, linkable: answer) }
+  given!(:answer_link) { create(:link, :answer, linkable: answer) }
 
   scenario 'user as the author of the link deletes it' do
     sign_in(user1)

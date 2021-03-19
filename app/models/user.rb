@@ -16,6 +16,10 @@ class User < ApplicationRecord
     resource.author_id == id
   end
 
+  def admin?
+    is_a?(Admin)
+  end
+
   def vote(votable, vote_status)
     votes.create(voter: self, votable: votable, status: vote_status)
   end

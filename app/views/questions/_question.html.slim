@@ -3,7 +3,8 @@ h2 class="question__title"
 p class="question__body"
   = question.body
 
-= render 'shared/vote', votable: question
+- if %i[vote_for vote_against unvote].any? { |action| can? action, question }
+  = render 'shared/vote', votable: question
 
 .question-errors
   = render "shared/errors", resource: question
@@ -12,7 +13,7 @@ p class="question__body"
 
 ul class="question-comments"
   = render question.comments
-- if current_user
+- if can? :create, Comment
   = render 'comments/form', commentable: question, comment: @comment
   
 div id="question-#{question.id}-files"
@@ -20,7 +21,7 @@ div id="question-#{question.id}-files"
     - question.files.each do |file|
       div id="file-#{file.id}"
         p= link_to file.filename.to_s, url_for(file)
-        - if current_user&.author?(question)
+        - if can? :destroy, file
           = link_to 'Delete file', attachment_path(file), method: :delete, remote: true
 
 .links
@@ -35,10 +36,10 @@ div id="question-#{question.id}-files"
           script src="#{link.url}.js"
         - else
           = link_to link.name, link.url
-        - if current_user&.author?(link.linkable)
+        - if can? :destroy, link
           = link_to 'Delete link', link_path(link), method: :delete, remote: true
 
-- if current_user&.author?(question)
+- if can? :create, Question
   = form_with model: question, class: "hidden", html: { id: "edit-question-#{question.id}" }, local: false do |form|
     .field
       = form.label :title
@@ -59,5 +60,6 @@ div id="question-#{question.id}-files"
       = link_to_add_association 'Add link', form, :links
     = form.submit 'Save'
 
+- if %i[udate destroy].any? { |action| can? action, question }
   p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
   p= link_to 'Delete', question_path(question), method: :delete

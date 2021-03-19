@@ -6,6 +6,8 @@ class AnswersController < ApplicationController
 
   include Voted
 
+  authorize_resource
+
   def create
     @answer = question.answers.create(answer_params.merge({ author: current_user }))
   end

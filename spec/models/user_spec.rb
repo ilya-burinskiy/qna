@@ -74,4 +74,12 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#admin?' do
+    let(:admin) { create(:admin) }
+    
+    it 'should return true if user is admin' do
+      expect(admin).to be_admin
+    end
+  end
 end

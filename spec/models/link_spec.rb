@@ -8,14 +8,14 @@ RSpec.describe Link, type: :model do
 
   describe '#validate_link_url' do
     context 'valid url' do
-      let(:valid_question_link) { build(:question_link) }
+      let(:valid_question_link) { build(:link, :question) }
       it 'does not add new error message' do
         expect { valid_question_link.save }.to_not change(valid_question_link.errors, :count)
       end
     end
 
     context 'invalid url' do
-      let(:invalid_question_link) { build(:question_link, :invalid) }
+      let(:invalid_question_link) { build(:link, :question, :invalid) }
       it 'adds new error message' do
         expect { invalid_question_link.save }.to change(invalid_question_link.errors, :count).by(1)
       end
@@ -24,7 +24,7 @@ RSpec.describe Link, type: :model do
 
   describe '#gist?' do
     context 'gist url' do
-      let(:question_gist_url) { create(:question_link, :gist) }
+      let(:question_gist_url) { create(:link, :question, :gist) }
 
       it 'should return true' do
         expect(question_gist_url.gist?).to eq true
@@ -32,7 +32,7 @@ RSpec.describe Link, type: :model do
     end
 
     context 'not gist url' do
-      let(:question_url) { create(:question_link) }
+      let(:question_url) { create(:link, :question) }
 
       it 'should return false' do
         expect(question_url.gist?).to eq false

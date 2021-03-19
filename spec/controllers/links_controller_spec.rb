@@ -4,7 +4,7 @@ RSpec.describe LinksController, type: :controller do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let!(:question) { create(:question, author: user1) }
-  let!(:question_link) { create(:question_link, linkable: question) }
+  let!(:question_link) { create(:link, :question, linkable: question) }
 
   describe 'DELETE #destroy' do
     describe 'Authenticated user' do
@@ -28,9 +28,9 @@ RSpec.describe LinksController, type: :controller do
           expect { delete :destroy, params: { id: question_link }, format: :js }.to_not change(question.links, :count)
         end
 
-        it 'renders #destroy' do
+        it 'responds with forbidden' do
           delete :destroy, params: { id: question_link }, format: :js
-          expect(response).to render_template :destroy
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end
