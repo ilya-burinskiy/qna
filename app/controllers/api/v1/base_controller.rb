@@ -1,7 +1,7 @@
 class Api::V1::BaseController < ApplicationController
   before_action :doorkeeper_authorize!
   
-  protected
+  private
 
   def current_ability
     @current_ability ||= Ability.new(current_resource_owner)
