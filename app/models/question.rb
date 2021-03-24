@@ -16,8 +16,6 @@ class Question < ApplicationRecord
   validates :title, presence: true
   validates :body, presence: true
 
-  after_create :calculate_reputation
-
   def best_answer
     answers.where(best: true).first
   end
