@@ -16,7 +16,13 @@ class Question < ApplicationRecord
   validates :title, presence: true
   validates :body, presence: true
 
+  after_create :calculate_reputation
+
   def best_answer
     answers.where(best: true).first
+  end
+
+  def self.asked_today
+    Question.where(created_at: Time.current.all_day)
   end
 end
