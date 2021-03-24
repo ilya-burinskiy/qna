@@ -18,6 +18,15 @@ RSpec.describe User, type: :model do
   let(:user2) { create(:user) }
   let(:question) { create(:question, author: user1) }
 
+  describe ".all_except" do
+    let!(:users) { create_list(:user, 3) }
+    let!(:user) { create(:user) }
+
+    it 'should return users' do
+      expect(User.all_except(user)).to eq users
+    end
+  end
+
   describe '#author?' do
     it 'should be author of question' do
       expect(user1).to be_author(question)

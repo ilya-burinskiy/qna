@@ -25,6 +25,11 @@ class Ability
 
   def user_abilities
     guest_abilities
+
+    can :me, User do |profile_owner|
+      profile_owner.id == user.id
+    end
+
     can :create, [Question, Answer, Comment]
 
     can [:update, :destroy], [Question, Answer] do |resource|

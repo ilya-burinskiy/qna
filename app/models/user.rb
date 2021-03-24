@@ -12,6 +12,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  def self.all_except(user)
+    where.not(id: user.id)
+  end
+
   def author?(resource)
     resource.author_id == id
   end
