@@ -9,6 +9,9 @@ RSpec.describe User, type: :model do
   it { should have_many(:user_rewards).dependent(:destroy) }
   it { should have_many(:earned_rewards).through(:user_rewards).source(:reward) }
 
+  it { should have_many(:question_subscriptions).dependent(:destroy) }
+  it { should have_many(:subscribed_questions).through(:question_subscriptions).source(:question) }
+
   it { should have_many(:votes).dependent(:destroy) }
   
   it { should validate_presence_of :email }
@@ -34,6 +37,27 @@ RSpec.describe User, type: :model do
 
     it 'should not be author of question' do
       expect(user2).to_not be_author(question)
+    end
+  end
+
+  describe '#subscribed?' do
+    let(:subscription) { create(:question_subscription) }
+
+    context 'User has subscribed for the question' do
+      let(:user) { subscription.user }
+      let(:question) { subscription.question }
+
+      it 'should return true' do
+        expect(user.subscribed?(question)).to be_truthy
+      end
+    end
+
+    context 'Use has not subscribed for the question' do
+      let(:user) { create(:user) }
+
+      it 'should return false' do
+        expect(user.subscribed?(question)).to be_falsey
+      end
     end
   end
 
@@ -80,6 +104,54 @@ RSpec.describe User, type: :model do
     context 'User has not voted' do
       it 'shoud not change Vote count' do
         expect { user2.unvote(question) }.to_not change(Vote, :count)
+      end
+    end
+  end
+
+  describe '#subscribe_for_question' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    context 'User has not yet subscribed for question' do
+      it 'creates new subscription' do
+        expect do
+          user.subscribe_for_question(question)
+        end.to change(user.question_subscriptions, :count).by(1)
+      end
+    end
+
+    context 'User has subscribed for question' do
+      let!(:question_subscription) { create(:question_subscription, user: user, question: question) }
+
+      it 'does not create subscription' do
+        expect do
+          user.subscribe_for_question(question)
+        end.to_not change(user.question_subscriptions, :count)
+      end
+    end
+  end
+
+  describe '#unsubscribe_from_question' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    
+    context 'User has not yet subscribed for question' do
+      let!(:question_subscription) { create(:question_subscription, user: user) }
+
+      it 'do nothing' do
+        expect do
+          user.unsubscribe_from_question(question)
+        end.to_not change(user.question_subscriptions, :count)
+      end
+    end
+
+    context 'User has subscribed for question' do
+      let!(:new_question_subscription) { create(:question_subscription, user: user, question: question) }
+
+      it 'deletes subscription' do
+        expect do
+          user.unsubscribe_from_question(question)
+        end.to change(user.question_subscriptions, :count).by(-1)
       end
     end
   end

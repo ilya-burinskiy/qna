@@ -7,6 +7,8 @@ RSpec.describe Question, type: :model do
   it { should have_many(:links).dependent(:destroy) }
   it { should have_one(:reward).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:question_subscriptions).dependent(:destroy) }
+  it { should have_many(:subscribers).through(:question_subscriptions).source(:user) }
 
   it { should validate_presence_of :title }
   it { should validate_presence_of :body }
