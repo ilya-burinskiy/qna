@@ -85,9 +85,9 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer).to eq old_answer
         end
 
-        it 'renders #update' do
+        it 'responses with 403' do
           patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
-          expect(response).to render_template :update
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end
@@ -117,9 +117,9 @@ RSpec.describe AnswersController, type: :controller do
           expect(question.best_answer).to eq nil
         end
 
-        it 'renders #best' do
+        it 'responses with 403' do
           patch :best, params: { id: answer }, format: :js
-          expect(response).to render_template :best
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end

@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   resources :questions, concerns: [:votable], except: %i[edit] do
     resources :comments, only: [:create]
+    resources :subscriptions, only: [:create, :destroy], shallow: true, controller: :question_subscriptions
 
     resources :answers, concerns: [:votable], except: %i[index show new edit], shallow: true do
       resources :comments, only: [:create], shallow: false

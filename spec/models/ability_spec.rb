@@ -27,6 +27,7 @@ RSpec.describe Ability, type: :model do
     it { should be_able_to :create, Question }
     it { should be_able_to :create, Answer }
     it { should be_able_to :create, Comment }
+    it { should be_able_to :create, QuestionSubscription}
 
     context 'As resource author' do
       describe 'Question abilities' do
@@ -79,6 +80,12 @@ RSpec.describe Ability, type: :model do
           it { should_not be_able_to :vote_against, answer }
           it { should_not be_able_to :unvote, answer }
         end
+      end
+
+      describe 'QuestionSubscription abilities' do
+        let(:subscription) { create(:question_subscription, user: user) }
+
+        it { should be_able_to :destroy, subscription }
       end
     end
 
@@ -135,6 +142,12 @@ RSpec.describe Ability, type: :model do
           it { should be_able_to :vote_against, answer }
           it { should be_able_to :unvote, answer }
         end
+      end
+
+      describe 'QuestionSubscritpions abilities' do
+        let(:subscription) { create(:question_subscription) }
+
+        it { should_not be_able_to :destroy, subscription }
       end
     end
   end

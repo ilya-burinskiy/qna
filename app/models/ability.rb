@@ -30,7 +30,7 @@ class Ability
       profile_owner.id == user.id
     end
 
-    can :create, [Question, Answer, Comment]
+    can :create, [Question, Answer, Comment, QuestionSubscription]
 
     can [:update, :destroy], [Question, Answer] do |resource|
       user.author?(resource)
@@ -46,6 +46,10 @@ class Ability
 
     can :destroy, Link do |link|
       user.author?(link.linkable)
+    end
+
+    can :destroy, QuestionSubscription do |subscription|
+      user.subscribed?(subscription.question)
     end
 
     can [:vote_for, :vote_against, :unvote], [Question, Answer] do |votable|

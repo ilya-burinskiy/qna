@@ -15,6 +15,8 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @comment = Comment.new
     @answer.links.new
+
+    @subscription = QuestionSubscription.where(user: current_user, question: question).first
   end
 
   def new
@@ -26,8 +28,9 @@ class QuestionsController < ApplicationController
     @question = Question.new(question_params)
     @question.author = current_user
     @question.reward.author = current_user if @question.reward
-
+    
     if @question.save
+      current_user.subscribe_for_question(@question)
       redirect_to question_path(@question), notice: 'Your question successfully created.'
     else
       @question.links.new
@@ -37,12 +40,14 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) if current_user.author?(question)
+    authorize! :update, question
+    question.update(question_params)
     @comment = Comment.new
   end
 
   def destroy
-    question.destroy if current_user.author?(question)
+    authorize! :destroy, question
+    question.destroy
     redirect_to questions_path
   end
 
