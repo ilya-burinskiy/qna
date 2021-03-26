@@ -44,7 +44,10 @@ class User < ApplicationRecord
   end
 
   def subscribe_for_question(question)
-    question_subscriptions.create(user: self, question: question)
+    return question_subscriptions.where(question: question) if subscribed?(question)
+
+    subscribed_questions.push(question)
+    question_subscriptions.last
   end
 
   def unsubscribe_from_question(question)
