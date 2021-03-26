@@ -50,4 +50,12 @@ RSpec.describe Answer, type: :model do
       end
     end
   end
+
+  describe '#save' do
+    let(:answer) { build(:answer) }
+    it 'it calls QuestionSubscribersNotificationJob#perform_later' do
+      expect(QuestionSubscribersNotifiactionJob).to receive(:perform_later)
+      answer.save
+    end
+  end
 end

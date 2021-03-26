@@ -15,6 +15,8 @@ class Answer < ApplicationRecord
 
   default_scope { order(best: :desc) }
 
+  after_create :notify_question_subscribers
+
   def become_best
     old_best_answer = question.best_answer
     reward = question.reward
@@ -31,6 +33,11 @@ class Answer < ApplicationRecord
         UserReward.create(reward: reward, user: author) if reward
       end
     end
+  end
 
+  private
+
+  def notify_question_subscribers
+    QuestionSubscribersNotifiactionJob.perform_later(question)
   end
 end

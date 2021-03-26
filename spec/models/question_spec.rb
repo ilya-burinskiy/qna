@@ -7,6 +7,8 @@ RSpec.describe Question, type: :model do
   it { should have_many(:links).dependent(:destroy) }
   it { should have_one(:reward).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:question_subscriptions).dependent(:destroy) }
+  it { should have_many(:subscribers).through(:question_subscriptions).source(:user) }
 
   it { should validate_presence_of :title }
   it { should validate_presence_of :body }
@@ -33,6 +35,28 @@ RSpec.describe Question, type: :model do
       last_answer.become_best
 
       expect(question.best_answer).to eq last_answer
+    end
+  end
+
+  describe '.asked_today' do
+    let!(:questions) { create_list(:question, 3) }
+
+    context 'if there are questions created today' do
+      it 'returns questions created today' do
+        expect(Question.asked_today).to match_array(questions)
+      end
+    end
+
+    context 'if there are no questions created today' do
+      before do
+        questions.each do |question|
+          question.update(created_at: question.created_at + 1.day)
+        end
+      end
+
+      it 'returns empty relation' do
+        expect(Question.asked_today).to match_array([])
+      end
     end
   end
 end

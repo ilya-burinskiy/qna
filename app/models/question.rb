@@ -8,6 +8,9 @@ class Question < ApplicationRecord
   
   has_many :comments, dependent: :destroy, as: :commentable
 
+  has_many :question_subscriptions, dependent: :destroy
+  has_many :subscribers, through: :question_subscriptions, source: :user
+
   has_many_attached :files
 
   accepts_nested_attributes_for :links, reject_if: :all_blank
@@ -18,5 +21,9 @@ class Question < ApplicationRecord
 
   def best_answer
     answers.where(best: true).first
+  end
+
+  def self.asked_today
+    Question.where(created_at: Time.current.all_day)
   end
 end

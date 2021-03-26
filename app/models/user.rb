@@ -8,6 +8,9 @@ class User < ApplicationRecord
   has_many :earned_rewards, through: :user_rewards, source: :reward
 
   has_many :votes, class_name: "Vote", foreign_key: "voter_id", dependent: :destroy
+
+  has_many :question_subscriptions, dependent: :destroy
+  has_many :subscribed_questions, through: :question_subscriptions, source: :question
   
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -18,6 +21,10 @@ class User < ApplicationRecord
 
   def author?(resource)
     resource.author_id == id
+  end
+
+  def subscribed?(question)
+    subscribed_questions.where(id: question).exists?
   end
 
   def admin?
@@ -34,5 +41,16 @@ class User < ApplicationRecord
 
   def get_vote(votable)
     @vote ||= votes.where(votable: votable).first
+  end
+
+  def subscribe_for_question(question)
+    return question_subscriptions.where(question: question) if subscribed?(question)
+
+    subscribed_questions.push(question)
+    question_subscriptions.last
+  end
+
+  def unsubscribe_from_question(question)
+    subscribed_questions.where(id: question).destroy_all
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_20_095237) do
+ActiveRecord::Schema.define(version: 2021_03_24_195624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,16 @@ ActiveRecord::Schema.define(version: 2021_03_20_095237) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
+  create_table "question_subscriptions", force: :cascade do |t|
+    t.bigint "question_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id"], name: "index_question_subscriptions_on_question_id"
+    t.index ["user_id", "question_id"], name: "index_question_subscriptions_on_user_id_and_question_id", unique: true
+    t.index ["user_id"], name: "index_question_subscriptions_on_user_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.string "title", null: false
     t.text "body", null: false
@@ -124,6 +134,7 @@ ActiveRecord::Schema.define(version: 2021_03_20_095237) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "author_id", null: false
     t.index ["author_id"], name: "index_questions_on_author_id"
+    t.index ["created_at"], name: "index_questions_on_created_at"
   end
 
   create_table "rewards", force: :cascade do |t|
@@ -178,6 +189,8 @@ ActiveRecord::Schema.define(version: 2021_03_20_095237) do
   add_foreign_key "comments", "users", column: "author_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "question_subscriptions", "questions"
+  add_foreign_key "question_subscriptions", "users"
   add_foreign_key "questions", "users", column: "author_id"
   add_foreign_key "rewards", "questions"
   add_foreign_key "rewards", "users", column: "author_id"

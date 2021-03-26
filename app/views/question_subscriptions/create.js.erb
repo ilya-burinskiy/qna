@@ -1,0 +1,5 @@
+$('.subscription-links').html(
+  '<%= link_to 'Unsubscribe', subscription_path(@subscription), 
+        method: :delete, 
+        remote: true, 
+        id: 'unsubscribe-link' %>')
