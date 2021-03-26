@@ -4,6 +4,6 @@ class QuestionSubscription < ApplicationRecord
 
   validates :user_id, uniqueness: {
     scope: :question_id,
-    message: "You have already subcribed"
+    message: "already subscribed"
   }
 end

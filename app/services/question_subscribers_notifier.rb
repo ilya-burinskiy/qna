@@ -14,11 +14,7 @@ class QuestionSubscribersNotifier
   private
 
   def notify_question_subscribers
-    question_subscribers = User.joins(:question_subscriptions).where(
-      question_subscriptions: { question: @question }
-    )
-
-    question_subscribers.each do |subscriber|
+    @question.subscribers.each do |subscriber|
       QuestionSubscribersMailer.notify(subscriber, @question)
     end
   end

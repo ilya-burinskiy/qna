@@ -24,7 +24,7 @@ class User < ApplicationRecord
   end
 
   def subscribed?(question)
-    question_subscriptions.where(user: self, question: question).exists?
+    subscribed_questions.where(id: question).exists?
   end
 
   def admin?
@@ -48,6 +48,6 @@ class User < ApplicationRecord
   end
 
   def unsubscribe_from_question(question)
-    question_subscriptions.where(user: self, question: question).destroy_all
+    subscribed_questions.where(id: question).destroy_all
   end
 end

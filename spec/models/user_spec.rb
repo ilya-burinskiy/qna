@@ -48,7 +48,7 @@ RSpec.describe User, type: :model do
       let(:question) { subscription.question }
 
       it 'should return true' do
-        expect(user.subscribed?(question)).to be_truthy
+        expect(user).to be_subscribed(question)
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe User, type: :model do
       let(:user) { create(:user) }
 
       it 'should return false' do
-        expect(user.subscribed?(question)).to be_falsey
+        expect(user).to_not be_subscribed(question)
       end
     end
   end
@@ -126,7 +126,7 @@ RSpec.describe User, type: :model do
       it 'does not create subscription' do
         expect do
           user.subscribe_for_question(question)
-        end.to_not change(user.question_subscriptions, :count)
+        end.to_not change(user.subscribed_questions, :count)
       end
     end
   end
